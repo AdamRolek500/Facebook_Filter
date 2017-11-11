@@ -10,7 +10,7 @@ function getPostScore(text) {
         if (xhttp.readyState == XMLHttpRequest.DONE) {
             console.log("Scoring!");
             numberOfPosts++;
-            score = xhttp.response;
+            score = xhttp.response.data;
             aggregatedScore += score;
             done = true;
             console.log("Score: " + score);
