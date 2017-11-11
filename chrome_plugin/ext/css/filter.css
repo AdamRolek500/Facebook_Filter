@@ -1,0 +1,9 @@
+.filter_content {
+	filter: blur(20px);
+	transition-property: -webkit-filter;
+	transition-duration: .4s;
+}
+
+.filter_content:hover, .filter_content:focus {
+	filter: blur(0px);
+}
