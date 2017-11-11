@@ -1,5 +1,27 @@
+var aggregatedScore = 0;
+var numberOfPosts = 0;
+
+function getPostScore(text) {
+    var url = "https://us-central1-facebook-filter.cloudfunctions.net/analyzePost";
+    var done = false;
+    var score = 0;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            score = xhttp.response;
+            done = true;
+        }
+    }
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader("Content-type", "text/plain");
+    xhttp.send(text);
+    while (!done) {
+    }
+    return score;
+    
+}
 function filterContent(element) {
-    if (element.textContent.indexOf("cuuuuuute") !== -1) {
+    if (getPostScore(element.textContent) < -.25) {
         element.className += " filter_content";
     }
 }

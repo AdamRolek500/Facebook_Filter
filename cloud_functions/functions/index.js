@@ -6,3 +6,8 @@ const functions = require('firebase-functions');
 // exports.helloWorld = functions.https.onRequest((request, response) => {
 //  response.send("Hello from Firebase!");
 // });
+
+exports.analyzePost = functions.https.onRequest((req, res) => {
+    const text = req.body;
+    res.status(200).send(1);
+});
