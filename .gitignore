@@ -1,4 +1,8 @@
 website/firebase-filter/src/firebase\.js
+
 website/node_modules/*
+
 *.DS_store
+
+cloud_functions/functions/node_modules/*
 
