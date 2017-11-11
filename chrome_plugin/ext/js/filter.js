@@ -7,17 +7,19 @@ function getPostScore(text) {
     var score = 0;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhttp.readyState == XMLHttpRequest.DONE) {
+            console.log("Scoring!");
+            numberOfPosts++;
             score = xhttp.response;
+            aggregatedScore += score;
             done = true;
+            console.log("Score: " + score);
         }
     }
     xhttp.open("POST", url, true);
     xhttp.setRequestHeader("Content-type", "text/plain");
     xhttp.send(text);
-    while (!done) {
-    }
-    return score;
+    return 1;
     
 }
 function filterContent(element) {
