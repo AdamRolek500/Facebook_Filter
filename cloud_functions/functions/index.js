@@ -1,8 +1,7 @@
 const functions = require('firebase-functions');
 const cors = require('cors')({origin: true});
 const admin = require('firebase-admin');
-const firestore = require('@google-cloud/firestore');
-const document = firestore.doc('posts/intro-to-firestore');
+const Firestore = require('@google-cloud/firestore');
 admin.initializeApp(functions.config().firebase);
 
 exports.analyzePost = functions.https.onRequest((req, res) => {
@@ -12,14 +11,12 @@ exports.analyzePost = functions.https.onRequest((req, res) => {
     })
 });
 
-
-
 const firestore = new Firestore({
   projectId: 'facebook_filter',
   keyFilename: 'E:\Hackital2017\Facebook Filter-9777f0aec3cc.json',
 });
 
-
+const document = firestore.doc('posts/intro-to-firestore');
 
 // Enter new data into the document.
 document.set({
