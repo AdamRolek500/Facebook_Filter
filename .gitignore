@@ -1,2 +1,3 @@
 website/js/firebase.js
+website/node_modules/*
 *.DS_store
