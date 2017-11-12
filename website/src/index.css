@@ -32,7 +32,7 @@ nav > div > div {
     position: absolute;
 }
 
-button {
+#submit {
     width: 90%;
     margin: 5% auto;
     margin-left: 5%;

@@ -110,7 +110,7 @@
                     setUID();
                 } else {
                     date = new Date((doc.nt.version.timestamp['seconds']) * 1000);
-                    $('#modal-content').html('<div><button type="button" onclick="submitPost(prompt(\'Please enter your post\', \'\'));">Submit Posts</button></div>');
+                    $('#modal-content').html('<div><button id="submit" type="button" onclick="submitPost(prompt(\'Please enter your post\', \'\'));">Submit Posts</button></div>');
                 }
             });
         }
