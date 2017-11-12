@@ -4,12 +4,11 @@ var countedComments = 0;
 var countedPosts = 0;
 
 function getPostScore(text) {
-    var url = "https://us-central1-facebook-filter.cloudfunctions.net/analyzePost";
+    var url = "https://us-central1-facebook-filter.cloudfunctions.net/analyzeTextSentiment";
     var done = false;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == XMLHttpRequest.DONE) {
-            console.log("Scoring!");
             numberOfPosts++;
             score = Number.parseFloat(xhttp.response);
             aggregatedScore += score;

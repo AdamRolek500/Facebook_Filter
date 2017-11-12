@@ -51,7 +51,7 @@ exports.analyzeTextSentiment = functions.https.onRequest((req, res) => {
 
       language.analyzeSentiment({document: document}).then(results => {
         const sentiment = results[0].documentSentiment;
-        var score = sentiment.score * 100;
+        var score = sentiment.score;
         res.status(200).send(score.toString());
       });
   });
