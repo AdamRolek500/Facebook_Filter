@@ -8,20 +8,18 @@ const vision = new Vision();
 const firestore = require('@google-cloud/firestore');
 admin.initializeApp(functions.config().firebase);
 
-exports.analyzePost = functions.https.onRequest((req, res) => {
-    cors(req, res, () => {
-        const text = req.body;
-        res.status(200).send("1");        
-    });
-});
-
 exports.createUser = functions.https.onRequest((req, res) => {
     cors(req, res, () => {
         const div = req.body.toString().indexOf(' : ');
         const uid = req.body.toString().substring(1, div);
         const name = req.body.toString().substring(div + 3);
-        admin.firestore().collection('users').doc(uid).set({name: name, numOfPosts: 0, positivity: 0});
-        res.status(200).send();        
+        admin.firestore().collection('users').doc(uid).get().then(function() {
+            if (!doc.exists) {
+                admin.firestore().collection('users').doc(uid).set({name: name, numOfPosts: 0, positivity: 0}); 
+            }
+            
+            res.status(200).send(); 
+        })      
     });
 });
 
