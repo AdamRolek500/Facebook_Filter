@@ -1,4 +1,4 @@
-website/firebase-filter/src/firebase\.js
+*firebase\.js
 
 website/node_modules/*
 
