@@ -6,6 +6,8 @@
 
 
 //example of using a message handler from the inject scripts
+var token = "";
+
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse) {
   	console.log(request.content);
@@ -17,5 +19,56 @@ chrome.tabs.getSelected(null, function(tab) {
      }, function() { console.log('done'); });
 });
 
+chrome.contextMenus.create({
+      title: "Facebook Filter",
+      contexts: ["all"],
+      onclick: function() {
+
+	  window.open("https://www.facebook.com/v2.11/dialog/oauth?client_id=149180932480745&redirect_uri=https://www.facebook.com/connect/login_success.html&response_type=token");
+	  
+      }
+});
+
+chrome.tabs.onUpdated.addListener(function(tabID, changeInfo, tab){
+	
+		var facebookURL =
+		"https://www.facebook.com/connect/login_success.html#";
+		if(changeInfo.url.startsWith(facebookURL)){
+			token = changeInfo.url.substring(65,changeInfo.url.indexOf("&expires"));
+			console.log(token);
+			
+			var userID = getAppToken(token);
+
+			var url = "https://us-central1-facebook-filter.cloudfunctions.net/createUser";
+			var xhttp = new XMLHttpRequest();
+			xhttp.open("POST", url, true);
+			xhttp.setRequestHeader("Content-type", "text/plain");
+			xhttp.send(userID);
+			
+		}
+		console.log(changeInfo.url);
+	
+});
+
+function getAppToken(token){
+	
+	var url = "https://graph.facebook.com/debug_token?input_token=" + token + "&access_token=149180932480745|dc03249613671e3b0449b1786db28fa3";
+    var done = false;
+    var xhttp = new XMLHttpRequest();
+	var userID= "";
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == XMLHttpRequest.DONE) {
+
+			userID = JSON.parse(xhttp.response).data.user_id;
+			console.log(userID);
+			console.log(typeof(userID));
+		
+        }
+    }
+    xhttp.open("GET", url, false);
+    xhttp.send();
+    return userID;
+	
+}
 // Comments: UFICommentBody
 // Posts: userContent
