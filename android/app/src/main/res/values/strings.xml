@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">facebookfilter</string>
+    <string name="facebook_app_id">149180932480745</string>
+    <string name="fb_login_protocol_scheme">fb149180932480745</string>
+    <string name="welcome_text">Welcome to Facebook Filter</string>
+</resources>
