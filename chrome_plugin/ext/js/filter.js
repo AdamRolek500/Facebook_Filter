@@ -1,47 +1,74 @@
 var aggregatedScore = 0;
 var numberOfPosts = 0;
+var countedComments = 0;
+var countedPosts = 0;
 
 function getPostScore(text) {
     var url = "https://us-central1-facebook-filter.cloudfunctions.net/analyzePost";
     var done = false;
-    var score = 0;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == XMLHttpRequest.DONE) {
             console.log("Scoring!");
             numberOfPosts++;
-            score = xhttp.response.data;
+            score = Number.parseFloat(xhttp.response);
             aggregatedScore += score;
-            done = true;
-            console.log("Score: " + score);
         }
     }
-    xhttp.open("POST", url, true);
+    xhttp.open("POST", url, false);
     xhttp.setRequestHeader("Content-type", "text/plain");
     xhttp.send(text);
-    return 1;
-    
+    xhttp.success
+    return score;
 }
+
 function filterContent(element) {
-    if (getPostScore(element.textContent) < -.25) {
+    if (getPostScore(element.textContent) < -0.25) {
         element.className += " filter_content";
     }
 }
 function filterUserContent() {
     var list = document.getElementsByClassName("userContent");
-    for (var i = 0; i < list.length; i++) {
-        var element = list[i];
+    for (; countedPosts < list.length; countedPosts++) {
+        var element = list[countedPosts];
         filterContent(element);
     }
+}
+
+function checkPositivity(){
+	if(aggregatedScore < -0.35){
+			alert("Your feed is very toxic today. Please visit reddit.com/r/eyebleach");
+	}
+
 }
 
 function filterComments() {
     var list = document.getElementsByClassName("UFICommentBody");
-    for (var i = 0; i < list.length; i++) {
-        var element = list[i];
+    for (;countedComments < list.length; countedComments++) {
+        var element = list[countedComments];
         filterContent(element);
     }
 }
 
-filterUserContent();
-filterComments();
+function onElementHeightChange(element, callback){
+    var lastHeight = element.clientHeight, newHeight;
+    (function run(){
+        newHeight = element.clientHeight;
+        if( lastHeight != newHeight )
+            callback();
+        lastHeight = newHeight;
+
+        if( element.onElementHeightChangeTimer )
+            clearTimeout(element.onElementHeightChangeTimer);
+
+        element.onElementHeightChangeTimer = setTimeout(run, 200);
+    })();
+}
+
+onElementHeightChange(document.body, function(){
+    filterComments();
+	filterUserContent();
+	checkPositivity();
+});
+
+
