@@ -20,12 +20,21 @@ chrome.tabs.getSelected(null, function(tab) {
 });
 
 chrome.contextMenus.create({
-      title: "Facebook Filter",
+      title: "Facebook Filter Log In",
       contexts: ["all"],
       onclick: function() {
 
 	  window.open("https://www.facebook.com/v2.11/dialog/oauth?client_id=149180932480745&redirect_uri=https://www.facebook.com/connect/login_success.html&response_type=token");
 	  
+      }
+});
+
+chrome.contextMenus.create({
+      title: "Leaderboards",
+      contexts: ["all"],
+      onclick: function() {
+
+	  window.open("leaderboard.html");
       }
 });
 
