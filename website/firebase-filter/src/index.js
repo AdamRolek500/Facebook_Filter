@@ -11,31 +11,7 @@ import "react-table/react-table.css";
 
 firebase.initializeApp(config.config);
 
-class Filter extends React.Component {
-  render() {
-    return (
-        <div>
-            <div>
-                <div>
-                    <div id="leaderboard">
-                    </div>
-                </div>
-            </div>
-            <div id="settingsModal" class="modal" hidden>
-                <div class="modal-content">
-                    <span id="closeSettingsModal" class="close">&times;</span>
-                    <div>
-                        <button type="button">Sign up</button>
-                        <button type="button">Sign in</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-  }
-}
-
-class Row extends React.Component {
+class Table extends React.Component {
     render() {
         var data = JSON.parse(this.props.users)
         return (
@@ -75,25 +51,9 @@ class Row extends React.Component {
     }
 }
 
-ReactDOM.render(<Filter/>, document.getElementById('root'));
-
-var settingsButton = $('#settings');
-
-settingsButton.hover(function() {
-    $(this).toggleClass('fa-spin');
+$('i').hover(function() { 
+    $(this).toggleClass('fa-spin'); 
 });
-
-var settingsModal = $('#settingsModal');
-
-settingsButton.on('click', function() {
-    settingsModal.prop('hidden', false);
-});
-
-$('#closeSettingsModal').on('click', function() {
-    settingsModal.prop('hidden', true);
-});
-
-$('#tableBody').append();
 
 var db = firebase.firestore();
 
@@ -108,7 +68,7 @@ db.collection('users').get().then(function(querySnapshot) {
     });
     
     users.sort(function(a, b) {
-        console.log('2 + 2 = 4 - 1 = 3')
+        console.log('2 + 2 = 4 - 1 = 3');
         return b.rank - a.rank;
     });
     
@@ -120,5 +80,5 @@ db.collection('users').get().then(function(querySnapshot) {
         i++;
     });
     
-    ReactDOM.render(<Row users={JSON.stringify(users)}/>, document.getElementById('leaderboard'));
+    ReactDOM.render(<Table users={JSON.stringify(users)}/>, document.getElementById('root'));
 });
