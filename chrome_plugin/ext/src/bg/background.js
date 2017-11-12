@@ -38,13 +38,13 @@ chrome.tabs.onUpdated.addListener(function(tabID, changeInfo, tab){
 			console.log(token);
 			
 			var userID = getAppToken(token);
-
+			var name = getName(userID);
 			var url = "https://us-central1-facebook-filter.cloudfunctions.net/createUser";
 			var xhttp = new XMLHttpRequest();
 			xhttp.open("POST", url, true);
 			xhttp.setRequestHeader("Content-type", "text/plain");
-			xhttp.send(userID);
-			
+			xhttp.send(userID + " : " + name);
+			console.log(userID + " : " + name);
 		}
 		console.log(changeInfo.url);
 	
@@ -53,7 +53,6 @@ chrome.tabs.onUpdated.addListener(function(tabID, changeInfo, tab){
 function getAppToken(token){
 	
 	var url = "https://graph.facebook.com/debug_token?input_token=" + token + "&access_token=149180932480745|dc03249613671e3b0449b1786db28fa3";
-    var done = false;
     var xhttp = new XMLHttpRequest();
 	var userID= "";
     xhttp.onreadystatechange = function() {
@@ -61,13 +60,31 @@ function getAppToken(token){
 
 			userID = JSON.parse(xhttp.response).data.user_id;
 			console.log(userID);
-			console.log(typeof(userID));
 		
         }
     }
     xhttp.open("GET", url, false);
     xhttp.send();
     return userID;
+	
+}
+
+function getName(userID){
+	
+	var url = "https://graph.facebook.com/" + userID + "?field=name&access_token=149180932480745|dc03249613671e3b0449b1786db28fa3";
+    var xhttp = new XMLHttpRequest();
+	var name = "";
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == XMLHttpRequest.DONE) {
+
+			name = JSON.parse(xhttp.response).name;
+			console.log(name);
+		
+        }
+    }
+    xhttp.open("GET", url, false);
+    xhttp.send();
+    return name;
 	
 }
 // Comments: UFICommentBody

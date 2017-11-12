@@ -23,7 +23,7 @@ function getPostScore(text) {
 }
 
 function filterContent(element) {
-    if (getPostScore(element.textContent) > -.25) {
+    if (getPostScore(element.textContent) < -0.25) {
         element.className += " filter_content";
     }
 }
@@ -36,7 +36,7 @@ function filterUserContent() {
 }
 
 function checkPositivity(){
-	if(aggregatedScore < -0.5){
+	if(aggregatedScore < -0.35){
 			alert("Your feed is very toxic today. Please visit reddit.com/r/eyebleach");
 	}
 
