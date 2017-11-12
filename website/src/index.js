@@ -82,3 +82,12 @@ db.collection('users').get().then(function(querySnapshot) {
     
     ReactDOM.render(<Table users={JSON.stringify(users)}/>, document.getElementById('root'));
 });
+pullPost('609279989093786');
+
+function pullPost(uid){
+    db.collection('users').doc(uid).get().then(function(doc) {
+        var date = new Date((doc._document.version.timestamp['seconds']) * 1000);
+        console.log(date);
+    });
+    
+}
