@@ -61,10 +61,10 @@ db.collection('users').get().then(function(querySnapshot) {
     var users = [];
     querySnapshot.forEach(function(doc) {
         var name = doc.data()['name'];
-        var positivity = doc.data()['positivity'] * 100;
+        var positivity = Number((doc.data()['positivity'] * 100).toFixed(2));
         var numOfPosts = doc.data()['numOfPosts'];
         var rank = positivity * numOfPosts;
-        users.push({rank: rank, name: name, positivity: positivity, numOfPosts: numOfPosts});
+        users.push({rank: rank, name: name, positivity: positivity + '%', numOfPosts: numOfPosts});
     });
     
     users.sort(function(a, b) {
