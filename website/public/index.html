@@ -26,15 +26,17 @@
       
     <div id="modal" hidden>
         <div id="modal-content">
-            <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true" onlogin="setUID();"></div>
+            <div id="login" class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true" onlogin="setUID();"></div>
         </div>
     </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
     <script src="./firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-firestore.js"></script>
     <script>
         var uid;
+        var date;
         
         firebase.initializeApp(config);
         var db = firebase.firestore();
@@ -51,26 +53,83 @@
             if (!uid) {
                 FB.api('/me', function(response) {
                     uid = response.id;
-                    console.log(uid)
-                    pullPost();
+                    pullDate();
                 });
             } else {
-                pullPost();
+                pullDate();
             }
         }
+        
+        function createUser() {
+            var userID = uid;
+            var name = getName(uid);
+            var url = "https://us-central1-facebook-filter.cloudfunctions.net/createUser";
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", url, true);
+            xhttp.setRequestHeader("Content-type", "text/plain");
+            xhttp.send(userID + " : " + name);
+        }
+        
+        function getAppToken(token){
+            var url = "https://graph.facebook.com/debug_token?input_token=" + token + "&access_token=149180932480745|dc03249613671e3b0449b1786db28fa3";
+            var xhttp = new XMLHttpRequest();
+            var userID= "";
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == XMLHttpRequest.DONE) {
 
-        function pullPost() {
+                    userID = JSON.parse(xhttp.response).data.user_id;
+
+                }
+            }
+            xhttp.open("GET", url, false);
+            xhttp.send();
+            return userID;
+
+        }
+
+        function getName(userID){
+
+            var url = "https://graph.facebook.com/" + userID + "?field=name&access_token=149180932480745|dc03249613671e3b0449b1786db28fa3";
+            var xhttp = new XMLHttpRequest();
+            var name = "";
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == XMLHttpRequest.DONE) {
+                    name = JSON.parse(xhttp.response).name;
+                }
+            }
+            xhttp.open("GET", url, false);
+            xhttp.send();
+            return name;
+
+        }
+
+        function pullDate() {
             db.collection('users').doc(uid).get().then(function(doc) {
-                console.log(doc);
-                var date = new Date((doc.nt.version.timestamp['seconds']) * 1000);
-                console.log(date);
+                if (!doc.nt) {
+                    createUser();
+                    setUID();
+                } else {
+                    date = new Date((doc.nt.version.timestamp['seconds']) * 1000);
+                    $('#modal-content').html('<div><button type="button" onclick="submitPost(prompt(\'Please enter your post\', \'\'));">Submit Posts</button></div>');
+                }
             });
-            
-            FB.api("/me/feed", function (response) {
-              if (response && !response.error) {
-                // console.log(response)
-              }
-            });
+        }
+        
+        function submitPost(post) {
+            var url = "https://us-central1-facebook-filter.cloudfunctions.net/analyzeTextSentiment";
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", url, true);
+            xhttp.setRequestHeader("Content-type", "text/plain");
+            xhttp.send(post);
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == XMLHttpRequest.DONE) {
+                    var xhttptwo = new XMLHttpRequest();
+                    xhttptwo.open("POST", "https://us-central1-facebook-filter.cloudfunctions.net/updatePositivity", true);
+                    xhttptwo.setRequestHeader("Content-type", "text/plain");
+                    xhttptwo.send(uid + ' : ' + xhttp.response.toString());
+                    return;
+                }
+            }
         }
     </script>
   </body>

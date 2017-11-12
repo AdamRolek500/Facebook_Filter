@@ -33,8 +33,13 @@ nav > div > div {
 }
 
 button {
-    width: 100%;
+    width: 90%;
+    margin: 5% auto;
+    margin-left: 5%;
+    margin-right: 5%;
     padding: 2.5%;
+    text-align: center;
+    font-size: 2em;
     border: none;
 }
 
@@ -77,19 +82,4 @@ input, select {
     width: 100%;
     margin: 10% auto;
     text-align: center;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    margin-right: 2.5%;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
 }

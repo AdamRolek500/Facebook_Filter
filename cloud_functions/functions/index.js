@@ -11,7 +11,7 @@ admin.initializeApp(functions.config().firebase);
 exports.createUser = functions.https.onRequest((req, res) => {
     cors(req, res, () => {
         const div = req.body.toString().indexOf(' : ');
-        var uid = req.body.toString().substring(1, div);
+        var uid = req.body.toString().substring(0, div);
         var name = req.body.toString().substring(div + 3);
         
         if (req.body.toString().indexOf(' : ') < 0) {
@@ -19,8 +19,6 @@ exports.createUser = functions.https.onRequest((req, res) => {
             uid = req.body['userid']
             name = req.body['name']
         }
-        
-        console.log(uid + " : " + name);
         
         admin.firestore().collection('users').doc(uid).get().then(doc => {
             if (!doc.exists) {
@@ -36,7 +34,7 @@ exports.createUser = functions.https.onRequest((req, res) => {
 exports.updatePositivity = functions.https.onRequest((req, res) => {
     cors(req, res, () => {
         const div = req.body.toString().indexOf(' : ');
-        const uid = req.body.toString().substring(1, div);
+        const uid = req.body.toString().substring(0, div);
         const pos = req.body.toString().substring(div + 3);
                 
         admin.firestore().collection('users').doc(uid).get().then(doc => {
@@ -66,20 +64,16 @@ exports.analyzeTextSentiment = functions.https.onRequest((req, res) => {
 });
 
 exports.analyzeImage = functions.https.onRequest((req, res) => {
-    cors(req,res, () => {
-        const request = {
-            source: {
-                imageUri: `https://scontent-iad3-1.xx.fbcdn.net/v/t1.0-9/22886288_1711257755571945_1288761193480795461_n.jpg?oh=ef8c0d1053cb89ff9907a2c94ee83a21&oe=5AAB2347`
-            }
-        };
-    vision.safeSearchDetection(request).then((results) => {
-        
-    const detections = results[0].safeSearchAnnotation;
+        cors(req,res, () => {
+            const request = {
+                source: {
+                    imageUri: `https://scontent-iad3-1.xx.fbcdn.net/v/t1.0-9/22886288_1711257755571945_1288761193480795461_n.jpg?oh=ef8c0d1053cb89ff9907a2c94ee83a21&oe=5AAB2347`
+                }
+            };
+        vision.safeSearchDetection(request).then((results) => {
 
-    console.log(`Adult: ${detections.adult}`);
-    console.log(`Violence: ${detections.violence}`);
-        
-    res.status(200).send('[{ "adult" : "' + detections.adult + '",  "violence" : "' + detections.violence + '" }]');
-  })
-});
+        const detections = results[0].safeSearchAnnotation;
+        res.status(200).send('[{ "adult" : "' + detections.adult + '",  "violence" : "' + detections.violence + '" }]');
+      })
+    });
 });
