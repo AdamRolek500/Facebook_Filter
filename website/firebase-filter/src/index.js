@@ -1,59 +1,84 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import ReactTable from 'react-table';
+import firebase from 'firebase';
+import 'firebase/firestore';
+import config from './firebase.js';
 import './index.css';
 import './font-awesome/css/font-awesome.min.css';
+import "react-table/react-table.css";
 
-class Filter extends React.Component {
-  render() {
-    return (
-        <div>
-            <nav>
-                <div>
-                    <h1>Facebook Filter</h1>
-                <div>
-                    <a href="#settings"><i id="settings" class="fa fa-cog fa-2x" aria-hidden="true"></i></a>
-                </div>
-                </div>
-            </nav>
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>User</th>
-                            <th>Positivity</th>
-                            <th>Number of Posts</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <Row rank="1" name="Kirin Patel" positivity="74" numOfPosts="2"/>
-                        <Row rank="2" name="Chris Mills" positivity="74" numOfPosts="2"/>
-                    </tbody>
-                </table>
-            </div>
-        <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
-        <script src="./firebase.js"></script>
-        </div>
-    );
-  }
-}
+firebase.initializeApp(config.config);
 
-class Row extends React.Component {
+class Table extends React.Component {
     render() {
+        var data = JSON.parse(this.props.users)
         return (
-            <tr id={this.props.name}>
-                <td>{this.props.rank}</td>
-                <td>{this.props.name}</td>
-                <td>{this.props.positivity}</td>
-                <td>{this.props.numOfPosts}</td>
-            </tr>
+            <div>
+                <ReactTable
+                    data={data}
+                    columns={[
+                        {
+                            Header: "Rank",
+                            accessor: "rank"
+                        },
+                        {
+                            Header: "Name",
+                            accessor: "name"
+                        },
+                        {
+                            Header: "Positivity",
+                            accessor: "positivity"
+                        },
+                        {
+                            Header: "Number of Posts",
+                            accessor: "numOfPosts"
+                        }
+                    ]}
+                    defaultSorted={[
+                        {
+                            id: "rank",
+                            desc: false
+                        }
+                    ]}
+                    defaultPageSize={10}
+                    className="-highlight"
+                />
+                <br />
+            </div>
         );
     }
 }
 
-ReactDOM.render(<Filter/>, document.getElementById('root'));
+$('i').hover(function() { 
+    $(this).toggleClass('fa-spin'); 
+});
 
-$('#settings').hover(function() {
-    $(this).toggleClass('fa-spin');
+var db = firebase.firestore();
+
+db.collection('users').get().then(function(querySnapshot) {
+    var users = [];
+    querySnapshot.forEach(function(doc) {
+        var name = doc.data()['name'];
+        var positivity = Number((doc.data()['positivity'] * 100).toFixed(2));
+        var numOfPosts = doc.data()['numOfPosts'];
+        var rank = positivity * numOfPosts;
+        users.push({rank: rank, name: name, positivity: positivity + '%', numOfPosts: numOfPosts});
+    });
+    
+    users.sort(function(a, b) {
+        console.log('2 + 2 = 4 - 1 = 3');
+        return b.rank - a.rank;
+    });
+    
+    var i = 0;
+    
+    users.forEach(function() {
+        console.log('quick maths')
+        users[i].rank = i + 1;
+        i++;
+    });
+    
+    ReactDOM.render(<Table users={JSON.stringify(users)}/>, document.getElementById('root'));
 });
