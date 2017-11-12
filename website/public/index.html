@@ -15,15 +15,63 @@
             <i id="settings" class="fa fa-cog fa-2x" aria-hidden="true"></i>
         </div>
         </div>
+        <div id="fb-root"></div>
     </nav>
       
     <div id="root">
+        <div stlye="width: 100%;">
+            <p style="text-align: center; margin-top: 35vh;"><i id="settings" class="fa fa-hourglass-end fa-spin fa-5x" aria-hidden="true" onlogin=""></i></p>
+        </div>
+    </div>
+      
+    <div id="modal" hidden>
+        <div id="modal-content">
+            <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true" onlogin="setUID();"></div>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
     <script src="./firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-firestore.js"></script>
-    <script src="functions.js"></script>
+    <script>
+        var uid;
+        
+        firebase.initializeApp(config);
+        var db = firebase.firestore();
+        
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11&appId=149180932480745';
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+        
+        function setUID() {
+            if (!uid) {
+                FB.api('/me', function(response) {
+                    uid = response.id;
+                    console.log(uid)
+                    pullPost();
+                });
+            } else {
+                pullPost();
+            }
+        }
 
+        function pullPost() {
+            db.collection('users').doc(uid).get().then(function(doc) {
+                console.log(doc);
+                var date = new Date((doc.nt.version.timestamp['seconds']) * 1000);
+                console.log(date);
+            });
+            
+            FB.api("/me/feed", function (response) {
+              if (response && !response.error) {
+                // console.log(response)
+              }
+            });
+        }
+    </script>
   </body>
 </html>

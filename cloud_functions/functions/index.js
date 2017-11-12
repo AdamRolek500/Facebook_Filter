@@ -11,10 +11,20 @@ admin.initializeApp(functions.config().firebase);
 exports.createUser = functions.https.onRequest((req, res) => {
     cors(req, res, () => {
         const div = req.body.toString().indexOf(' : ');
-        const uid = req.body.toString().substring(1, div);
-        const name = req.body.toString().substring(div + 3);
-        admin.firestore().collection('users').doc(uid).get().then(function() {
+        var uid = req.body.toString().substring(1, div);
+        var name = req.body.toString().substring(div + 3);
+        
+        if (req.body.toString().indexOf(' : ') < 0) {
+            console.log(req.body.toString());
+            uid = req.body['userid']
+            name = req.body['name']
+        }
+        
+        console.log(uid + " : " + name);
+        
+        admin.firestore().collection('users').doc(uid).get().then(doc => {
             if (!doc.exists) {
+                
                 admin.firestore().collection('users').doc(uid).set({name: name, numOfPosts: 0, positivity: 0}); 
             }
             

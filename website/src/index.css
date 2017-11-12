@@ -55,7 +55,7 @@ input, select {
     text-align: center;
 }
 
-.modal {
+#modal {
     position: fixed;
     z-index: 1;
     left: 0;
@@ -67,14 +67,16 @@ input, select {
     background-color: rgba(0,0,0,0.4);
 }
 
-.modal-content {
+#modal-content {
     background-color: #607D8B;
     margin: 15% auto;
     width: 40%;
 }
 
-.modal-content > div {
-    padding: 2.5%;
+.fb-login-button {
+    width: 100%;
+    margin: 10% auto;
+    text-align: center;
 }
 
 .close {
