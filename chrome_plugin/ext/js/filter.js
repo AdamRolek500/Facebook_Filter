@@ -1,7 +1,7 @@
 var aggregatedScore = 0;
 var numberOfPosts = 0;
 var countedComments = 0;
-var countedPosts = 0;
+var countedPosts = "";
 
 function getPostScore(text) {
     var url = "https://us-central1-facebook-filter.cloudfunctions.net/analyzeTextSentiment";
@@ -22,15 +22,18 @@ function getPostScore(text) {
 }
 
 function filterContent(element) {
-    if (getPostScore(element.textContent) <= -0.25) {
+    if (element && getPostScore(element.textContent) <= -0.25) {
         element.className += " filter_content";
     }
 }
 function filterUserContent() {
     var list = document.getElementsByClassName("userContent");
-    for (; countedPosts < list.length; countedPosts++) {
-        var element = list[countedPosts];
-        filterContent(element);
+    for (i = 0; i < list.length; i++) {
+        if (!countedPosts.includes(list[i].textContent)) {
+            var element = list[i];
+            filterContent(element);
+            countedPosts += element.textContent;
+        }
     }
 }
 
@@ -42,9 +45,12 @@ function checkPositivity(){
 
 function filterComments() {
     var list = document.getElementsByClassName("UFICommentBody");
-    for (;countedComments < list.length; countedComments++) {
-        var element = list[countedComments];
-        filterContent(element);
+    for (i = 0; i < list.length; i++) {
+        if (!countedPosts.includes(list[i].textContent)) {
+            var element = list[i];
+            filterContent(element);
+            countedPosts += element.textContent;
+        }
     }
 }
 
@@ -88,5 +94,16 @@ onElementHeightChange(document.body, function() {
         classname[i].addEventListener('click', filter, false);
     }
 });
+
+setInterval(function() {
+    console.log('Testing')
+    filterComments();
+	filterUserContent();
+	checkPositivity();
+
+    for (var i = 0; i < classname.length; i++) {
+        classname[i].addEventListener('click', filter, false);
+    }
+}, 5000);
 
 
