@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "A harrassment filter for facebook!",
-  "homepage_url": "http://kirinpatel.com",
+  "homepage_url": "https://github.com/AdamRolek500/Facebook_Filter",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

@@ -22,7 +22,7 @@ function getPostScore(text) {
 }
 
 function filterContent(element) {
-    if (getPostScore(element.textContent) < -0.25) {
+    if (getPostScore(element.textContent) <= -0.25) {
         element.className += " filter_content";
     }
 }
@@ -35,10 +35,9 @@ function filterUserContent() {
 }
 
 function checkPositivity(){
-	if(aggregatedScore < -0.35){
-			alert("Your feed is very toxic today. Please visit reddit.com/r/eyebleach");
-	}
-
+	/*if(aggregatedScore < -0.5){
+        alert("Your feed is very toxic today. Please visit reddit.com/r/eyebleach");
+	}*/
 }
 
 function filterComments() {
@@ -53,21 +52,41 @@ function onElementHeightChange(element, callback){
     var lastHeight = element.clientHeight, newHeight;
     (function run(){
         newHeight = element.clientHeight;
-        if( lastHeight != newHeight )
+        if(lastHeight != newHeight )
             callback();
         lastHeight = newHeight;
 
-        if( element.onElementHeightChangeTimer )
+        if(element.onElementHeightChangeTimer )
             clearTimeout(element.onElementHeightChangeTimer);
 
         element.onElementHeightChangeTimer = setTimeout(run, 200);
     })();
 }
 
-onElementHeightChange(document.body, function(){
+filterComments();
+filterUserContent();
+checkPositivity();
+
+var classname = document.getElementsByClassName("UFIPagerLink");
+
+var filter = function() {
+    filterComments();
+    filterUserContent();
+    checkPositivity();
+};
+
+for (var i = 0; i < classname.length; i++) {
+    classname[i].addEventListener('click', filter, false);
+}
+
+onElementHeightChange(document.body, function() {
     filterComments();
 	filterUserContent();
 	checkPositivity();
+
+    for (var i = 0; i < classname.length; i++) {
+        classname[i].addEventListener('click', filter, false);
+    }
 });
 
 
