@@ -12,7 +12,7 @@ target 'Firebase Filter' do
   pod 'FacebookLogin'
   pod 'FacebookShare'
   
-  pod 'Just'
+  pod 'Alamofire'
 
   # Pods for Firebase Filter
 

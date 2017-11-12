@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Vro-uL-knI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="0HL-O0-ZaP">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -19,24 +19,89 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Facebook Filter" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="fbC-oY-85H">
-                                <rect key="frame" x="0.0" y="174" width="375" height="32.5"/>
+                                <rect key="frame" x="0.0" y="270" width="375" height="32.5"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="27"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logging into Facebook Filter is an agreement that your Facebook posts can be tracked, viewed, and stored in our database." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wrW-lm-RE6">
+                                <rect key="frame" x="0.0" y="376" width="375" height="61"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="wrW-lm-RE6" firstAttribute="leading" secondItem="P6d-Qa-NWF" secondAttribute="leading" id="4qM-jV-eXR"/>
                             <constraint firstItem="P6d-Qa-NWF" firstAttribute="trailing" secondItem="fbC-oY-85H" secondAttribute="trailing" id="P7q-H7-Cxd"/>
+                            <constraint firstItem="P6d-Qa-NWF" firstAttribute="bottom" secondItem="wrW-lm-RE6" secondAttribute="bottom" constant="230" id="SWQ-7s-kqO"/>
+                            <constraint firstItem="P6d-Qa-NWF" firstAttribute="trailing" secondItem="wrW-lm-RE6" secondAttribute="trailing" id="bzR-Gz-drs"/>
                             <constraint firstItem="fbC-oY-85H" firstAttribute="leading" secondItem="P6d-Qa-NWF" secondAttribute="leading" id="eXe-jb-eyz"/>
                             <constraint firstItem="fbC-oY-85H" firstAttribute="top" secondItem="P6d-Qa-NWF" secondAttribute="top" constant="154" id="xV5-2N-cng"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="P6d-Qa-NWF"/>
                     </view>
+                    <navigationItem key="navigationItem" id="psQ-50-oO2">
+                        <barButtonItem key="rightBarButtonItem" title="View Posts" id="5ub-IJ-JSH">
+                            <connections>
+                                <action selector="viewPosts:" destination="Vro-uL-knI" id="3zq-Pb-ziN"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="legal" destination="wrW-lm-RE6" id="VDg-vs-g3b"/>
+                        <outlet property="viewPostsButton" destination="5ub-IJ-JSH" id="vIc-M4-VjT"/>
+                        <segue destination="EXo-4v-cNV" kind="show" identifier="segueDisplayPosts" id="Y5E-Hk-JIR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kvh-ww-KhD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="148" y="-51"/>
+            <point key="canvasLocation" x="148" y="-51.724137931034484"/>
+        </scene>
+        <!--Posts View Controller-->
+        <scene sceneID="38K-dj-b8x">
+            <objects>
+                <tableViewController id="EXo-4v-cNV" customClass="PostsViewController" customModule="Firebase_Filter" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="eLu-VD-AcN">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="e6H-Dt-4TH">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="e6H-Dt-4TH" id="LlC-hh-7AH">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="EXo-4v-cNV" id="0ta-Ic-hVS"/>
+                            <outlet property="delegate" destination="EXo-4v-cNV" id="rYy-mL-9Lz"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cFw-T6-rBv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="903" y="-53"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="xCs-qF-CtZ">
+            <objects>
+                <navigationController id="0HL-O0-ZaP" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="W0g-n7-XTJ">
+                        <rect key="frame" x="0.0" y="20" width="375" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Vro-uL-knI" kind="relationship" relationship="rootViewController" id="JXz-Ep-Chn"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Eb-nx-Y1I" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-615" y="-52"/>
         </scene>
     </scenes>
 </document>
