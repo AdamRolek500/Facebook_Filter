@@ -38,6 +38,10 @@ button {
     border: none;
 }
 
+input, select {
+    color: #000 !important;
+}
+
 .ReactTable {
     width: 70% !important;
     margin-left: 17.5%;

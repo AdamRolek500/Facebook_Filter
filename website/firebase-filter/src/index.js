@@ -1,10 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import ReactTable from "react-table";
+import ReactTable from 'react-table';
+import firebase from 'firebase';
+import 'firebase/firestore';
+import config from './firebase.js';
 import './index.css';
 import './font-awesome/css/font-awesome.min.css';
 import "react-table/react-table.css";
+
+firebase.initializeApp(config.config);
 
 class Filter extends React.Component {
   render() {
@@ -15,8 +20,6 @@ class Filter extends React.Component {
                     <div id="leaderboard">
                     </div>
                 </div>
-            <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
-            <script src="./firebase.js"></script>
             </div>
             <div id="settingsModal" class="modal" hidden>
                 <div class="modal-content">
@@ -57,6 +60,12 @@ class Row extends React.Component {
                             accessor: "numOfPosts"
                         }
                     ]}
+                    defaultSorted={[
+                        {
+                            id: "rank",
+                            desc: false
+                        }
+                    ]}
                     defaultPageSize={10}
                     className="-highlight"
                 />
@@ -86,4 +95,30 @@ $('#closeSettingsModal').on('click', function() {
 
 $('#tableBody').append();
 
-ReactDOM.render(<Row users= '[{"rank": "1", "name": "Kirin Patel", "positivity": "50", "numOfPosts": "2"}, {"rank": "1", "name": "Kirin asdads Patel", "positivity": "52320", "numOfPosts": "2"}]'/>, document.getElementById('leaderboard'));
+var db = firebase.firestore();
+
+db.collection('users').get().then(function(querySnapshot) {
+    var users = [];
+    querySnapshot.forEach(function(doc) {
+        var name = doc.data()['name'];
+        var positivity = doc.data()['positivity'] * 100;
+        var numOfPosts = doc.data()['numOfPosts'];
+        var rank = positivity * numOfPosts;
+        users.push({rank: rank, name: name, positivity: positivity, numOfPosts: numOfPosts});
+    });
+    
+    users.sort(function(a, b) {
+        console.log('2 + 2 = 4 - 1 = 3')
+        return b.rank - a.rank;
+    });
+    
+    var i = 0;
+    
+    users.forEach(function() {
+        console.log('quick maths')
+        users[i].rank = i + 1;
+        i++;
+    });
+    
+    ReactDOM.render(<Row users={JSON.stringify(users)}/>, document.getElementById('leaderboard'));
+});
